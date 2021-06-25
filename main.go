@@ -1,24 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	// "github.com/sarthakvk/onepass/backend"
+	"github.com/sarthakvk/onepass/ui"
 )
 
-const DF_NAME string = "data.op"
-
-var logged_in bool
-
 func main() {
-	_, err := os.Open(DF_NAME)
-	if err != nil {
-		register()
-	} else {
-		o := login()
-	}
-
-	MainMenu()
-
+	ui.Base()
 }
-
-func MainMenu() {}

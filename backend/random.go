@@ -1,4 +1,4 @@
-package main
+package backend
 
 import (
 	"crypto/rand"
@@ -26,5 +26,5 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 // case the caller should not continue.
 func GenerateRandomString(s int) (string, error) {
 	b, err := GenerateRandomBytes(s)
-	return base64.URLEncoding.EncodeToString(b), err
+	return base64.StdEncoding.EncodeToString(b), err
 }

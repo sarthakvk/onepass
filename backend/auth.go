@@ -1,54 +1,38 @@
-package main
+package backend
 
 import (
-	"fmt"
-	"encoding/base64"
 	"crypto/sha512"
+	"encoding/base64"
 	"os"
 )
+
 /*
 * Register user is data file not present
-* 
+*
 * first `64` bits of file are sha512 hash
 * of password.
-* 
+*
 * permission of data file is set to `700`
 *
-*/
-func register() {
-	fmt.Println("Welcome to OnePass! please set master password for using")
-	
-	var pass []byte
-	fmt.Scan(&pass)
+ */
+func Register(pass []byte) {
 	encoded := base64.StdEncoding.EncodeToString(pass)
 	hash := sha512.New()
 	hash.Write([]byte(encoded))
-	
-	os.WriteFile(DF_NAME, hash.Sum(nil), os.FileMode(0700))
-	
-	rkey, _ := GenerateRandomString(64);
 
-	file, err := os.OpenFile(DF_NAME, os.O_APPEND, 0700);
+	file, err := os.OpenFile(DF_NAME, os.O_CREATE | os.O_RDWR, 0700)
 	if err != nil {
-		panic(err);
+		panic(err)
 	}
-
-	defer file.Close();
-
-	hash.Reset()
-	hash.Write([]byte(rkey))
+	file.Seek(0,0)
 	file.Write(hash.Sum(nil))
-
-
 }
 
 /*
  * authenticate user and logges him in
  */
-func login() bool {
-	fmt.Print("Enter Passcode: ")
-	var pass []byte
-	fmt.Scan(&pass)
+
+func Login(pass []byte) bool {
 	encoded := base64.StdEncoding.EncodeToString(pass)
 	hash := sha512.New()
 	hash.Write([]byte(encoded))
@@ -62,6 +46,7 @@ func login() bool {
 			return false
 		}
 	}
-	logged_in = true
+	Logged_in = true
+	_passcode = string(pass)
 	return true
 }
